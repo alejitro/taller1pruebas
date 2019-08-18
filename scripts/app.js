@@ -2,7 +2,7 @@ function firstLoad() {
 
   botonAddCity = document.getElementById('butAddCity');
 
-  botonAddCity.addEventListener('click',saveStation,false);
+  //botonAddCity.addEventListener('click',saveStation,false);
 
   var createDB =indexedDB.open('EstacionesMetro');
 
@@ -14,18 +14,6 @@ function firstLoad() {
     bd.createObjectStore('Estacion',{keyPath: 'key'});
   }
 }
-
-function saveStation() {
-  var select = document.getElementById('selectTimetableToAdd');
-  var selected = select.options[select.selectedIndex];
-  var key = selected.value;
-  var label = selected.textContent;
-
-  var save= bd.transaction(['Estacion'],'readwrite');
-  var tabla = save.objectStore('Estacion');
-  var addCity = tabla.add({key: key, label: label});
-}
-
 (function () {
     'use strict';
 
@@ -83,6 +71,26 @@ function saveStation() {
      * Methods to update/refresh the UI
      *
      ****************************************************************************/
+     app.loadStations = function () {
+        console.log("Entra a loadStations");
+        var transaccion = bd.transaction(['Estacion'],'readonly');
+        var almacen= transaccion.objectStore('Estacion');
+        var cursor = almacen.openCursor();
+        cursor.addEventListener('success',app.leerDatos,false);
+     };
+
+     app.leerDatos= function (e) {
+        var dataLastUpdated = new Date(data.created);
+        var cursor = e.target.result;
+
+        if(cursor){
+          var i;
+          for(i=0; i<cursor.length;i++){
+            console.log(cursor[i]);
+            app.getSchedule(cursor[i].key, cursor[i].label)
+          }
+        }
+     };
 
     // Toggles the visibility of the add new station dialog.
     app.toggleAddDialog = function (visible) {
@@ -92,6 +100,7 @@ function saveStation() {
             app.addDialog.classList.remove('dialog-container--visible');
         }
     };
+
 
     // Updates a timestation card with the latest weather forecast. If the card
     // doesn't already exist, it's cloned from the template.
@@ -153,6 +162,10 @@ function saveStation() {
                     result.created = response._metadata.date;
                     result.schedules = response.result.schedules;
                     app.updateTimetableCard(result);
+                    var save= bd.transaction(['Estacion'],'readwrite');
+                    var tabla = save.objectStore('Estacion');
+                    var addCity = tabla.add({key: key, label: label, schedules: result.schedules });
+                    addCity.addEventListener('onsuccess',app.loadStations,false);
                 }
             } else {
                 // Return the initial weather forecast since no data is available.

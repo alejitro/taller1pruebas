@@ -5,9 +5,14 @@ const CACHE_NAME = 'static-cache-v1';
 
 
 const FILES_TO_CACHE = [
-    '/offline.html',
-    '/styles/inline.css'
+    '/index.html',
+    '/styles/inline.css',
+    '/',
+    '/scripts/app.js',
+    '/images',
 ];
+
+
 
 self.addEventListener('install', (evt) => {
   console.log('[ServiceWorker] Install');
@@ -15,9 +20,8 @@ self.addEventListener('install', (evt) => {
     caches.open(CACHE_NAME).then((cache) => {
       console.log('[ServiceWorker] Pre-caching offline page');
       return cache.addAll(FILES_TO_CACHE);
-  })
-);
-
+    })
+  );
   self.skipWaiting();
 });
 
@@ -48,7 +52,8 @@ self.addEventListener('fetch', (evt) => {
         .catch(() => {
           return caches.open(CACHE_NAME)
               .then((cache) => {
-                return cache.match('/offline.html');
+                //cache.addAll(DATA_TO_CACHE);
+                return cache.match('/index.html');
               });
         })
   );
