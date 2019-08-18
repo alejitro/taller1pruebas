@@ -41,6 +41,7 @@
         app.getSchedule(key, label);
         app.selectedTimetables.push({key: key, label: label});
         app.toggleAddDialog(false);
+        
     });
 
     document.getElementById('butAddCancel').addEventListener('click', function () {

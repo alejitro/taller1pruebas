@@ -1,0 +1,18 @@
+{
+  "name": "Metro Paris",
+  "short_name": "MetroParis",
+  "icons": [{
+    "src": "/images/ic_add_white.24px.svg",
+      "sizes": "24x24",
+      "type": "image/svg"
+    },
+    {
+      "src": "/images/ic_refresh_white_24px.svg",
+      "sizes": "24x24",
+      "type": "image/svg"
+    }],
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#3E4EB8",
+  "theme_color": "#2F3BA2"
+}
