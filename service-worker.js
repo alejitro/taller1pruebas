@@ -6,6 +6,7 @@ const CACHE_NAME = 'static-cache-v1';
 
 const FILES_TO_CACHE = [
     '/offline.html',
+    '/styles/inline.css'
 ];
 
 self.addEventListener('install', (evt) => {
@@ -47,7 +48,7 @@ self.addEventListener('fetch', (evt) => {
         .catch(() => {
           return caches.open(CACHE_NAME)
               .then((cache) => {
-                return cache.match('offline.html');
+                return cache.match('/offline.html');
               });
         })
   );

@@ -1,177 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Metro Paris 1</title>
-  <link rel="manifest" href="/public/manifest.json">
-  <meta name="theme-color" content="#2F3BA2" />
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      color: #444;
-      font-family: 'Helvetica', 'Verdana', sans-serif;
-      -moz-osx-font-smoothing: grayscale;
-      -webkit-font-smoothing: antialiased;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      width: 100%;
-    }
-
-    html {
-      overflow: hidden;
-    }
-
-    body {
-      align-content: stretch;
-      align-items: stretch;
-      background: #ececec;
-      display: flex;
-      flex-direction: column;
-      flex-wrap: nowrap;
-      justify-content: flex-start;
-    }
-
-    /**
-    * Header
-    */
-
-    .header {
-      align-content: center;
-      align-items: stretch;
-      background: #3f51b5;
-      box-shadow:
-        0 4px 5px 0 rgba(0, 0, 0, 0.14),
-        0 2px 9px 1px rgba(0, 0, 0, 0.12),
-        0 4px 2px -2px rgba(0, 0, 0, 0.2);
-      color: #fff;
-      display: flex;
-      flex-direction: row;
-      flex-wrap: nowrap;
-      font-size: 20px;
-      height: 56px;
-      justify-content: flex-start;
-      padding: 16px 16px 0 16px;
-      position: fixed;
-      transition: transform 0.233s cubic-bezier(0, 0, 0.21, 1) 0.1s;
-      width: 100%;
-      will-change: transform;
-      z-index: 1000;
-    }
-
-    .header h1 {
-      flex: 1;
-      font-size: 20px;
-      font-weight: 400;
-      margin: 0;
-    }
-
-    .header .powered-by {
-      color: white;
-      font-size: 0.6em;
-      text-decoration: none;
-    }
-
-    .main {
-      flex: 1;
-      overflow-x: hidden;
-      overflow-y: auto;
-      padding-top: 60px;
-    }
-
-    .weather-card {
-      background: #fff;
-      border-radius: 2px;
-      box-shadow:
-        0 2px 2px 0 rgba(0, 0, 0, 0.14),
-        0 3px 1px -2px rgba(0, 0, 0, 0.2),
-        0 1px 5px 0 rgba(0, 0, 0, 0.12);
-      box-sizing: border-box;
-      margin: 16px;
-      padding: 16px;
-      position: relative;
-    }
-
-    .offline-panda {
-      display: block;
-      margin-bottom: 1.5em;
-      margin-left: auto;
-      margin-right: auto;
-    }
-  </style>
-</head>
-<body>
-  <header class="header">
-    <h1 class="header__title">Paris Métro 1</h1>
-    <button id="butRefresh" class="headerButton" aria-label="Refresh"></button>
-    <button id="butAdd" class="headerButton" aria-label="Add"></button>
-  </header>
-
-  <main class="main">
-
-    <div class="card cardTemplate" hidden>
-      <div class="line-key" hidden></div>
-      <div class="card-last-updated" hidden></div>
-      <div class="label"></div>
-      <div class="subtitle"></div>
-      <div class="schedule">
-        <div class="message"></div>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="canonical" href="https://weather-pwa-sample.firebaseapp.com/final/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paris Métro 1</title>
+    <link rel="stylesheet" type="text/css" href="styles/inline.css">
+    <link rel="manifest" href="/public/manifest.json">
+    <script src="scripts/indexed.js" async></script>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="PWA MetroParis">
+    <meta name="theme-color" content="#2F3BA2" />
+    <meta name="description" content="Horarios de metro en Paris">
+    <link rel="manifest" href="/public/manifest.json">
+    <link rel="apple-touch-icon" href="/images/metroicon.png">
+  </head>
+  <body>
+    <header class="header" id="pageHeader">
+      <h1 class="header__title">Paris Métro 1</h1>
+      <button id="butRefresh" class="headerButton" aria-label="Refresh"></button>
+      <button id="butAdd" class="headerButton" aria-label="Add"></button>
+    </header>
+    <main class="main">
+      <div class="card cardTemplate" hidden>
+        <div class="line-key" hidden></div>
+        <div class="card-last-updated" hidden></div>
+        <div class="label"></div>
+        <div class="subtitle"></div>
+        <div class="schedule">
+          <div class="message"></div>
+        </div>
+        <div class="schedule">
+          <div class="message"></div>
+        </div>
+        <div class="schedule">
+          <div class="message"></div>
+        </div>
+        <div class="schedule">
+          <div class="message"></div>
+        </div>
       </div>
-      <div class="schedule">
-        <div class="message"></div>
-      </div>
-      <div class="schedule">
-        <div class="message"></div>
-      </div>
-      <div class="schedule">
-        <div class="message"></div>
-      </div>
+    </main>
+    <div>
+      <img src="/images/parismetrologo.png">
     </div>
+  </body>
 
-  </main>
-
-  <div class="dialog-container">
-    <div class="dialog">
-      <div class="dialog-title">Add new timetable</div>
-      <div class="dialog-body">
-        <select id="selectTimetableToAdd">
-          <!-- Values map to Yahoo Weather API Where On Earth Identifiers (WOEIDs).
-               https://developer.yahoo.com/weather/documentation.html#req -->
-          <option value="metros/1/nation/A">Nation, Direction La Défense</option>
-          <option value="metros/1/nation/R">Nation, Direction Château de Vincennes</option>
-          <option value="metros/1/bastille/A">Bastille, Direction La Défense</option>
-          <option value="metros/1/bastille/R">Bastille, Direction Château de Vincennes</option>
-          <option value="metros/1/hotel+de+ville/A">Hôtel de Ville, Direction La Défense</option>
-          <option value="metros/1/hotel+de+ville/R">Hôtel de Ville, Direction Château de Vincennes</option>
-          <option value="metros/1/chatelet/A">Châtelet, Direction La Défense</option>
-          <option value="metros/1/chatelet/R">Châtelet, Direction Château de Vincennes</option>
-          <option value="metros/1/palais+royal+(musee+du+louvre)/A">Palais-Royal (Musee du Louvre), Direction La Défense</option>
-          <option value="metros/1/palais+royal+(musee+du+louvre)/R">Palais-Royal (Musee du Louvre), Direction Château de Vincennes</option>
-          <option value="metros/1/champs+elysees+clemenceau/A">Champs-Elysees-Clemenceau, Direction La Défense</option>
-          <option value="metros/1/champs+elysees+clemenceau/R">Champs-Elysees-Clemenceau, Direction Château de Vincennes</option>
-
-        </select>
-      </div>
-      <div class="dialog-buttons">
-        <button id="butAddCity" class="button">Add</button>
-        <button id="butAddCancel" class="button">Cancel</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="loader">
-    <svg viewBox="0 0 32 32" width="32" height="32">
-      <circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle>
-    </svg>
-  </div>
-  <div>
-      Oops, estas desconectado, esta aplicacion requiere acceso a internet
-  </div>
-</body>
-</html>
+  </html>

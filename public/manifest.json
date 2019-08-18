@@ -10,7 +10,23 @@
       "src": "/images/ic_refresh_white_24px.svg",
       "sizes": "24x24",
       "type": "image/svg"
-    }],
+    },
+    {
+      "src": "/images/metroicon.jpg",
+      "sizes": "246x246",
+      "type": "image/jpg"
+    },
+    {
+      "src": "/images/logometro.png",
+      "sizes": "300x300",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/parismetrologo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+    ],
   "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#3E4EB8",
