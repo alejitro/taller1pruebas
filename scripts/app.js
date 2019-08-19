@@ -56,6 +56,7 @@ function firstLoad() {
         }
         app.getSchedule(key, label);
         app.selectedTimetables.push({key: key, label: label});
+        app.saveLocationList(app.selectedTimetables);
         app.toggleAddDialog(false);
 
     });
@@ -72,6 +73,9 @@ function firstLoad() {
      *
      ****************************************************************************/
      app.loadStations = function () {
+        /*cargar.forEach(function (key) {
+          app.getSchedule(key);
+        })*/
         console.log("Entra a loadStations");
         var transaccion = bd.transaction(['Estacion'],'readonly');
         var almacen= transaccion.objectStore('Estacion');
@@ -80,16 +84,11 @@ function firstLoad() {
      };
 
      app.leerDatos= function (e) {
-        var dataLastUpdated = new Date(data.created);
+        var dataLastUpdated = new Date(e.created);
         var cursor = e.target.result;
-
+        /*console.log("Valor de Cursor",cursor);
         if(cursor){
-          var i;
-          for(i=0; i<cursor.length;i++){
-            console.log(cursor[i]);
-            app.getSchedule(cursor[i].key, cursor[i].label)
-          }
-        }
+        }*/
      };
 
     // Toggles the visibility of the add new station dialog.
@@ -100,8 +99,40 @@ function firstLoad() {
             app.addDialog.classList.remove('dialog-container--visible');
         }
     };
+    //save location list
+    app.saveLocationList= function (locations) {
+      const data = JSON.stringify(locations);
+      localStorage.setItem('locationList', data);
+    }
 
-
+    //load location list
+    app.loadLocationList= function() {
+      let locations = localStorage.getItem('locationList');
+      if (locations) {
+        try {
+          locations = JSON.parse(locations);
+        } catch (ex) {
+          locations = {};
+        }
+      }
+      if (!locations || Object.keys(locations).length === 0) {
+        const key = initialStationTimetable.key;
+        locations = {};
+        locations[0] = {key: key, label: initialStationTimetable.label, created:initialStationTimetable.created, schedules: initialStationTimetable.sche};
+      }
+      console.log("Estaciones: ", locations);
+      /*Object.keys(locations).value.forEach(function (data) {
+        console.log("Key Estacion a mostrar: ",data.key);
+        console.log("Label Estacion a mostrar: ",locations.label );
+        //app.getSchedule(locations.key, locations.label);
+      })*/
+      var i;
+      for(i=0;i<Object.keys(locations).length;i++){
+        app.getSchedule(locations[i].key, locations[i].label);
+      }
+      //app.getSchedule(locations.key, locations.label);
+      return locations;
+    }
     // Updates a timestation card with the latest weather forecast. If the card
     // doesn't already exist, it's cloned from the template.
 
@@ -150,7 +181,7 @@ function firstLoad() {
 
     app.getSchedule = function (key, label) {
         var url = 'https://api-ratp.pierre-grimaud.fr/v3/schedules/' + key;
-
+        console.log("la url es: ",url);
         var request = new XMLHttpRequest();
         request.onreadystatechange = function () {
             if (request.readyState === XMLHttpRequest.DONE) {
@@ -164,12 +195,12 @@ function firstLoad() {
                     app.updateTimetableCard(result);
                     var save= bd.transaction(['Estacion'],'readwrite');
                     var tabla = save.objectStore('Estacion');
-                    var addCity = tabla.add({key: key, label: label, schedules: result.schedules });
-                    addCity.addEventListener('onsuccess',app.loadStations,false);
-                }
+                    var addCity = tabla.add({key: key, label: label, schedules: result.schedules});
+                    addCity.addEventListener('success',app.loadStations,false);
+                  }
             } else {
                 // Return the initial weather forecast since no data is available.
-                app.updateTimetableCard(initialStationTimetable);
+              app.updateTimetableCard(initialStationTimetable);
             }
         };
         request.open('GET', url);
@@ -180,6 +211,7 @@ function firstLoad() {
     app.updateSchedules = function () {
         var keys = Object.keys(app.visibleCards);
         keys.forEach(function (key) {
+            console.log("Llave schedules",key);
             app.getSchedule(key);
         });
     };
@@ -221,6 +253,8 @@ function firstLoad() {
      *   Instead, check out IDB (https://www.npmjs.com/package/idb) or
      *   SimpleDB (https://gist.github.com/inexorabletash/c8069c042b734519680c)
      ************************************************************************/
+    var cargar = app.loadLocationList();
+    //cargar.addEventListener('success', app.loadStations, false)
 
     app.getSchedule('metros/1/bastille/A', 'Bastille, Direction La Défense');
     app.selectedTimetables = [

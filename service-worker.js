@@ -3,13 +3,13 @@
 
 const CACHE_NAME = 'static-cache-v1';
 
-
 const FILES_TO_CACHE = [
     '/index.html',
     '/styles/inline.css',
     '/',
     '/scripts/app.js',
     '/images',
+    '/offline.html'
 ];
 
 
