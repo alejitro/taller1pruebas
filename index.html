@@ -31,6 +31,15 @@
   <meta name="description" content="Horarios de metro en Paris">
   <link rel="apple-touch-icon" href="/images/metroicon.png">
 
+  <script defer src="/__/firebase/6.4.0/firebase-app.js"></script>
+  <!-- include only the Firebase features as you need -->
+  <script defer src="/__/firebase/6.4.0/firebase-auth.js"></script>
+  <script defer src="/__/firebase/6.4.0/firebase-database.js"></script>
+  <script defer src="/__/firebase/6.4.0/firebase-messaging.js"></script>
+  <script defer src="/__/firebase/6.4.0/firebase-storage.js"></script>
+  <!-- initialize the SDK after all desired features are loaded -->
+  <script defer src="/__/firebase/init.js"></script>
+
 
 </head>
 <body>
@@ -100,11 +109,11 @@
   </div>
 
   <!-- Uncomment the line below when ready to test with fake data -->
-  <script src="scripts/app.js" async></script>
+  <script src="./scripts/app.js" async></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
+        navigator.serviceWorker.register('/public/service-worker.js')
           .then((reg) => {
             console.log('Service worker registered.', reg);
         });
