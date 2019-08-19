@@ -4,12 +4,8 @@
 const CACHE_NAME = 'static-cache-v1';
 
 const FILES_TO_CACHE = [
-    '/public/index.html',
-    '/styles/inline.css',
-    '/',
-    '/scripts/app.js',
-    '/images',
-    '/public/offline.html'
+    '/index.html',
+    '/offline.html'
 ];
 
 
@@ -52,8 +48,7 @@ self.addEventListener('fetch', (evt) => {
         .catch(() => {
           return caches.open(CACHE_NAME)
               .then((cache) => {
-                //cache.addAll(DATA_TO_CACHE);
-                return cache.match('/public/index.html');
+                return cache.match('/offline.html');
               });
         })
   );
