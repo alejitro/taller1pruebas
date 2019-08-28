@@ -72,7 +72,7 @@ function firstLoad() {
      * Methods to update/refresh the UI
      *
      ****************************************************************************/
-     app.loadStations = function () {
+    app.loadStations = function () {
         /*cargar.forEach(function (key) {
           app.getSchedule(key);
         })*/
@@ -166,6 +166,7 @@ function firstLoad() {
         }
 
         if (app.isLoading) {
+            window.cardLoadTime = performance.now();
             app.spinner.setAttribute('hidden', true);
             app.container.removeAttribute('hidden');
             app.isLoading = false;
@@ -186,6 +187,7 @@ function firstLoad() {
         request.onreadystatechange = function () {
             if (request.readyState === XMLHttpRequest.DONE) {
                 if (request.status === 200) {
+                    window.firstLoadRequest = performance.now();
                     var response = JSON.parse(request.response);
                     var result = {};
                     result.key = key;
